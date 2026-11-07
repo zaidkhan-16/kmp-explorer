@@ -2,8 +2,7 @@
 > **Understand. Visualize. Experiment.**  
 > An interactive journey into the Knuth-Morris-Pratt (KMP) string matching algorithm.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?style=for-the-badge&logo=github)](https://zaidkhan-16.github.io/kmp-explorer/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?style=for-the-badge&logo=github)](https://kmp-explorer-b0c6pvw9v-zaid-khan-s-projects-9bad2bb7.vercel.app/)
 [![Pure Vanilla](https://img.shields.io/badge/Dependencies-Zero%20(Pure%20Vanilla)-blue?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 ---
