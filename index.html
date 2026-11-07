@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KMP Explorer – Interactive Learning Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-brand">
+        <span class="brand-icon">◆</span>
+        <span class="brand-text">KMP Explorer</span>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#intro" data-section="1" class="nav-link">Introduction</a>
+        <a href="#lps" data-section="2" class="nav-link">LPS Array</a>
+        <a href="#visualization" data-section="3" class="nav-link">Visualization</a>
+        <a href="#playground" data-section="4" class="nav-link">Playground</a>
+        <a href="#implementation" data-section="5" class="nav-link">Implementation</a>
+        <a href="#complexity" data-section="6" class="nav-link">Complexity</a>
+        <a href="#challenges" data-section="7" class="nav-link">Challenges</a>
+        <a href="#quiz" data-section="8" class="nav-link">Quiz</a>
+      </div>
+      <div class="nav-right">
+        <div class="nav-progress-wrap">
+          <div class="progress-bar-nav">
+            <div class="progress-fill-nav" id="progress-fill"></div>
+          </div>
+          <span class="progress-label" id="progress-text">0 / 8</span>
+        </div>
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <header id="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <span class="hero-badge">Interactive Learning Lab</span>
+      <h1 class="hero-title">KMP Explorer</h1>
+      <p class="hero-subtitle">Understand. Visualize. Experiment.</p>
+      <p class="hero-desc">An interactive journey into the <strong>Knuth-Morris-Pratt</strong> string matching algorithm.</p>
+      <div class="hero-meta">
+        <span class="meta-chip"><span class="chip-icon">⏱</span> 45-minute lesson</span>
+        <span class="meta-chip"><span class="chip-icon">🖐</span> Hands-on</span>
+      </div>
+      <div class="hero-cards">
+        <div class="hcard">
+          <div class="hcard-icon">📖</div>
+          <h3>Learn</h3>
+          <p>Understand the algorithm step by step.</p>
+        </div>
+        <div class="hcard">
+          <div class="hcard-icon">👁</div>
+          <h3>Visualize</h3>
+          <p>Watch the pattern matching process.</p>
+        </div>
+        <div class="hcard">
+          <div class="hcard-icon">⚡</div>
+          <h3>Practice</h3>
+          <p>Run your own text and pattern.</p>
+        </div>
+        <div class="hcard">
+          <div class="hcard-icon">🏆</div>
+          <h3>Evaluate</h3>
+          <p>Complete challenges and earn a score.</p>
+        </div>
+      </div>
+      <a href="#intro" class="cta-btn">
+        Start Learning <span class="cta-arrow">→</span>
+      </a>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-dot"></div>
+    </div>
+  </header>
+
+  <!-- ========== SECTION 1: INTRODUCTION ========== -->
+  <section id="intro" class="section" data-index="1">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <div>
+          <h2>Introduction</h2>
+          <p class="section-sub">What is string matching, and why does KMP matter?</p>
+        </div>
+        <span class="section-time">~3 min</span>
+      </div>
+
+      <div class="callout callout-scenario">
+        <div class="callout-icon">💡</div>
+        <div class="callout-body">
+          <h3>Real-World Scenario</h3>
+          <p>Imagine searching for the word <code>ABABCABAB</code> inside a large document containing <strong>millions of characters</strong>.</p>
+          <p>A basic algorithm compares characters one by one. Whenever it encounters a mismatch, it may <em>repeat comparisons unnecessarily</em>.</p>
+          <p><strong>KMP solves this</strong> by remembering information from previous comparisons — so it never looks at the same character twice.</p>
+        </div>
+      </div>
+
+      <div class="concepts-grid">
+        <div class="concept-card">
+          <div class="cc-num">1</div>
+          <h4>What is string matching?</h4>
+          <p>Given a <strong>text</strong> string and a <strong>pattern</strong> string, find all positions where the pattern occurs inside the text. This is fundamental to search engines, text editors, DNA analysis, and network security.</p>
+        </div>
+        <div class="concept-card">
+          <div class="cc-num">2</div>
+          <h4>What is the naive algorithm?</h4>
+          <p>Try the pattern at every position in the text. At each position, compare characters one by one. If all match, record the position. Otherwise, shift the pattern by one character and restart from scratch.</p>
+        </div>
+        <div class="concept-card">
+          <div class="cc-num">3</div>
+          <h4>Why is naive matching inefficient?</h4>
+          <p>When a mismatch occurs after several matching characters, the naive algorithm forgets <em>everything</em> it just learned and re-examines the same characters. In the worst case, this results in <strong>O(n × m)</strong> comparisons.</p>
+        </div>
+        <div class="concept-card">
+          <div class="cc-num">4</div>
+          <h4>What problem does KMP solve?</h4>
+          <p>KMP preprocesses the pattern into a <strong>failure function (LPS array)</strong> that tells it exactly where to resume after a mismatch — achieving <strong>O(n + m)</strong> time with zero wasted comparisons on the text.</p>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Naive vs KMP — At a Glance</h3>
+      <div class="comparison-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th class="col-naive">Naive Algorithm</th>
+              <th class="col-kmp">KMP Algorithm</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Comparison strategy</td>
+              <td>May repeat comparisons</td>
+              <td>Reuses previous information</td>
+            </tr>
+            <tr>
+              <td>Worst-case time</td>
+              <td><code>O(n × m)</code></td>
+              <td><code>O(n + m)</code></td>
+            </tr>
+            <tr>
+              <td>Preprocessing</td>
+              <td>None</td>
+              <td>Builds an LPS array in O(m)</td>
+            </tr>
+            <tr>
+              <td>Text pointer behavior</td>
+              <td>May move backwards</td>
+              <td>Never moves backwards</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Naive vs KMP animated mini-demo -->
+      <div class="naive-vs-kmp-demo">
+        <h3 class="subsection-title">See the Difference</h3>
+        <p class="demo-desc">Watch how naive search re-examines characters, while KMP skips ahead intelligently.</p>
+        <div class="demo-controls">
+          <button class="btn btn-outline" id="naive-kmp-play">▶ Play Comparison</button>
+          <button class="btn btn-outline" id="naive-kmp-reset">↺ Reset</button>
+        </div>
+        <div class="demo-side-by-side">
+          <div class="demo-panel">
+            <h4>Naive Algorithm</h4>
+            <div class="demo-text-row" id="naive-text-row"></div>
+            <div class="demo-pattern-row" id="naive-pattern-row"></div>
+            <div class="demo-stats">Comparisons: <strong id="naive-comp-count">0</strong></div>
+          </div>
+          <div class="demo-panel">
+            <h4>KMP Algorithm</h4>
+            <div class="demo-text-row" id="kmp-text-row"></div>
+            <div class="demo-pattern-row" id="kmp-pattern-row"></div>
+            <div class="demo-stats">Comparisons: <strong id="kmp-comp-count">0</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 2: LPS ARRAY ========== -->
+  <section id="lps" class="section section-alt" data-index="2">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <div>
+          <h2>Understanding the LPS Array</h2>
+          <p class="section-sub">The secret engine behind KMP's efficiency.</p>
+        </div>
+        <span class="section-time">~7 min</span>
+      </div>
+
+      <div class="lps-explainer">
+        <h3>What is LPS?</h3>
+        <p><strong>LPS</strong> stands for <strong>Longest Proper Prefix which is also a Suffix</strong>.</p>
+        <p>For every position <em>i</em> in the pattern, <code>LPS[i]</code> tells us the length of the longest proper prefix of the substring <code>pattern[0..i]</code> that is also a suffix of that substring.</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">📌</div>
+          <div class="callout-body">
+            <p>A <strong>proper prefix</strong> is a prefix that is <em>not</em> the entire string. For example, the proper prefixes of <code>ABC</code> are <code>""</code>, <code>"A"</code>, and <code>"AB"</code> (but not <code>"ABC"</code>).</p>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">LPS Table for <code>ABABCABAB</code></h3>
+      <div class="lps-static-table">
+        <table class="lps-table">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Character</th>
+              <td>A</td><td>B</td><td>A</td><td>B</td><td>C</td><td>A</td><td>B</td><td>A</td><td>B</td>
+            </tr>
+            <tr>
+              <th>LPS</th>
+              <td>0</td><td>0</td><td>1</td><td>2</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="subsection-title">Interactive LPS Builder</h3>
+      <p class="lps-instructions">Click any character below to see <strong>why</strong> its LPS value is what it is. The matching prefix and suffix will be highlighted.</p>
+
+      <div class="lps-interactive" id="lps-interactive">
+        <div class="lps-pattern-row" id="lps-pattern-row">
+          <!-- Filled by JS -->
+        </div>
+        <div class="lps-value-row" id="lps-value-row">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <div class="lps-explanation-box" id="lps-explanation-box">
+        <p class="lps-explain-placeholder">👆 Click a character above to see its LPS breakdown.</p>
+      </div>
+
+      <h3 class="subsection-title">How Is LPS Computed?</h3>
+      <div class="lps-algo-steps">
+        <div class="algo-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <p>Start with <code>LPS[0] = 0</code> (a single character has no proper prefix/suffix).</p>
+          </div>
+        </div>
+        <div class="algo-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <p>Maintain a variable <code>length</code> tracking the length of the previous longest prefix-suffix. Start at <code>0</code>.</p>
+          </div>
+        </div>
+        <div class="algo-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <p>For each position <code>i</code> from 1 to m−1:</p>
+            <ul>
+              <li>If <code>pattern[i] == pattern[length]</code>: increment <code>length</code>, set <code>LPS[i] = length</code>.</li>
+              <li>If they don't match and <code>length ≠ 0</code>: set <code>length = LPS[length − 1]</code> (fall back) and retry without advancing <code>i</code>.</li>
+              <li>If they don't match and <code>length == 0</code>: set <code>LPS[i] = 0</code>, move to next <code>i</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- LPS Step-by-Step computation visualizer -->
+      <h3 class="subsection-title">Step-Through LPS Construction</h3>
+      <p>Watch the LPS array being built character by character.</p>
+      <div class="lps-stepper" id="lps-stepper">
+        <div class="lps-stepper-display" id="lps-stepper-display">
+          <!-- Filled by JS -->
+        </div>
+        <div class="lps-stepper-vars" id="lps-stepper-vars"></div>
+        <div class="lps-stepper-explanation" id="lps-stepper-explanation"></div>
+        <div class="stepper-controls">
+          <button class="btn btn-sm" id="lps-step-prev" disabled>← Previous</button>
+          <button class="btn btn-sm btn-primary" id="lps-step-next">Next →</button>
+          <button class="btn btn-sm" id="lps-step-reset">↺ Reset</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3: STEP-BY-STEP VISUALIZATION ========== -->
+  <section id="visualization" class="section" data-index="3">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">03</span>
+        <div>
+          <h2>Algorithm Visualization</h2>
+          <p class="section-sub">Watch KMP match patterns — step by step.</p>
+        </div>
+        <span class="section-time">~10 min</span>
+      </div>
+
+      <div class="viz-info">
+        <p>Text: <code>ABABDABACDABABCABAB</code> &nbsp;|&nbsp; Pattern: <code>ABABCABAB</code></p>
+        <div class="color-legend">
+          <span class="legend-item"><span class="legend-dot legend-green"></span> Match</span>
+          <span class="legend-item"><span class="legend-dot legend-red"></span> Mismatch</span>
+          <span class="legend-item"><span class="legend-dot legend-blue"></span> Current comparison</span>
+          <span class="legend-item"><span class="legend-dot legend-grey"></span> Unprocessed</span>
+        </div>
+      </div>
+
+      <div class="viz-display" id="viz-display">
+        <div class="viz-index-row" id="viz-index-row"></div>
+        <div class="viz-text-row" id="viz-text-row"></div>
+        <div class="viz-pattern-row" id="viz-pattern-row"></div>
+        <div class="viz-pointer-row" id="viz-pointer-row"></div>
+      </div>
+
+      <div class="viz-lps-display">
+        <h4>LPS Array for Pattern</h4>
+        <div class="viz-lps-row" id="viz-lps-row"></div>
+      </div>
+
+      <div class="viz-state" id="viz-state">
+        <div class="state-vars">
+          <div class="state-var"><span class="var-label">i (text)</span> <span class="var-value" id="viz-i">0</span></div>
+          <div class="state-var"><span class="var-label">j (pattern)</span> <span class="var-value" id="viz-j">0</span></div>
+          <div class="state-var"><span class="var-label">Comparisons</span> <span class="var-value" id="viz-comparisons">0</span></div>
+          <div class="state-var"><span class="var-label">Matches found</span> <span class="var-value" id="viz-matches">0</span></div>
+        </div>
+        <div class="state-explanation" id="viz-explanation">
+          Press <strong>Next Step</strong> or <strong>Auto Play</strong> to begin.
+        </div>
+      </div>
+
+      <div class="viz-controls">
+        <button class="btn" id="viz-prev" disabled>← Previous</button>
+        <button class="btn btn-primary" id="viz-next">Next Step →</button>
+        <button class="btn btn-accent" id="viz-auto">▶ Auto Play</button>
+        <button class="btn" id="viz-reset">↺ Reset</button>
+        <div class="speed-control">
+          <label for="viz-speed">Speed:</label>
+          <input type="range" id="viz-speed" min="1" max="5" value="3" step="1">
+          <span id="viz-speed-label">3×</span>
+        </div>
+      </div>
+
+      <div class="viz-results" id="viz-results" style="display:none;">
+        <h4>✅ Pattern found at index: <span id="viz-result-indices"></span></h4>
+        <p>Total comparisons made: <strong id="viz-result-comparisons"></strong></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 4: INTERACTIVE PLAYGROUND ========== -->
+  <section id="playground" class="section section-alt" data-index="4">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">04</span>
+        <div>
+          <h2>Interactive Playground</h2>
+          <p class="section-sub">Try KMP yourself with your own strings.</p>
+        </div>
+        <span class="section-time">~7 min</span>
+      </div>
+
+      <div class="playground-box">
+        <h3>Try KMP Yourself</h3>
+        <div class="pg-inputs">
+          <div class="input-group">
+            <label for="pg-text">Enter text</label>
+            <input type="text" id="pg-text" placeholder="e.g. ABABDABACDABABCABAB" maxlength="100" spellcheck="false" autocomplete="off">
+          </div>
+          <div class="input-group">
+            <label for="pg-pattern">Enter pattern</label>
+            <input type="text" id="pg-pattern" placeholder="e.g. ABABCABAB" maxlength="50" spellcheck="false" autocomplete="off">
+          </div>
+          <button class="btn btn-primary btn-lg" id="pg-run">Find Pattern</button>
+        </div>
+        <div class="pg-error" id="pg-error" style="display:none;"></div>
+      </div>
+
+      <div class="pg-results" id="pg-results" style="display:none;">
+        <h3>Results</h3>
+
+        <div class="pg-lps-section">
+          <h4>LPS Array for Pattern</h4>
+          <div class="pg-lps-row" id="pg-lps-row"></div>
+        </div>
+
+        <div class="pg-viz-section">
+          <h4>Visualization</h4>
+          <div class="pg-viz-display" id="pg-viz-display">
+            <div class="pg-viz-text-row" id="pg-viz-text-row"></div>
+            <div class="pg-viz-pattern-row" id="pg-viz-pattern-row"></div>
+          </div>
+          <div class="pg-viz-state" id="pg-viz-state"></div>
+          <div class="pg-viz-explanation" id="pg-viz-explanation"></div>
+          <div class="viz-controls">
+            <button class="btn" id="pg-prev" disabled>← Previous</button>
+            <button class="btn btn-primary" id="pg-next">Next Step →</button>
+            <button class="btn btn-accent" id="pg-auto">▶ Auto Play</button>
+            <button class="btn" id="pg-reset-viz">↺ Reset</button>
+          </div>
+        </div>
+
+        <div class="pg-summary" id="pg-summary" style="display:none;">
+          <h4>Summary</h4>
+          <p id="pg-summary-text"></p>
+        </div>
+      </div>
+
+      <div class="pg-examples">
+        <p>Try these examples:</p>
+        <button class="btn btn-outline btn-sm pg-example" data-text="AAAAABAAABA" data-pattern="AAAB">AAAB in AAAAABAAABA</button>
+        <button class="btn btn-outline btn-sm pg-example" data-text="ABCABCABC" data-pattern="ABC">ABC in ABCABCABC</button>
+        <button class="btn btn-outline btn-sm pg-example" data-text="AAACAAAAAAC" data-pattern="AAAC">AAAC in AAACAAAAAAC</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 5: PYTHON IMPLEMENTATION ========== -->
+  <section id="implementation" class="section" data-index="5">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">05</span>
+        <div>
+          <h2>Python Implementation</h2>
+          <p class="section-sub">Complete, commented code you can run today.</p>
+        </div>
+        <span class="section-time">~5 min</span>
+      </div>
+
+      <div class="impl-tabs">
+        <button class="impl-tab active" data-tab="lps-code">LPS Preprocessing</button>
+        <button class="impl-tab" data-tab="search-code">Pattern Searching</button>
+        <button class="impl-tab" data-tab="full-code">Full Code</button>
+      </div>
+
+      <!-- Tab 1: LPS Code -->
+      <div class="impl-panel active" id="panel-lps-code">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Python</span>
+            <button class="copy-btn" data-target="code-lps">Copy</button>
+          </div>
+          <pre><code id="code-lps"><span class="kw">def</span> <span class="fn">compute_lps</span>(pattern):
+    <span class="cm">"""Build the Longest Proper Prefix-Suffix array."""</span>
+    m = <span class="fn">len</span>(pattern)
+    lps = [<span class="num">0</span>] * m          <span class="cm"># LPS array, initialized to all zeros</span>
+    length = <span class="num">0</span>              <span class="cm"># Length of the previous longest prefix-suffix</span>
+    i = <span class="num">1</span>                   <span class="cm"># Start from index 1 (LPS[0] is always 0)</span>
+
+    <span class="kw">while</span> i < m:
+        <span class="kw">if</span> pattern[i] == pattern[length]:
+            <span class="cm"># Characters match → extend the current prefix-suffix</span>
+            length += <span class="num">1</span>
+            lps[i] = length
+            i += <span class="num">1</span>
+        <span class="kw">elif</span> length != <span class="num">0</span>:
+            <span class="cm"># Mismatch after some matches → fall back using LPS</span>
+            <span class="cm"># Don't increment i — try again with shorter prefix</span>
+            length = lps[length - <span class="num">1</span>]
+        <span class="kw">else</span>:
+            <span class="cm"># No match and no fallback → LPS[i] = 0</span>
+            lps[i] = <span class="num">0</span>
+            i += <span class="num">1</span>
+
+    <span class="kw">return</span> lps</code></pre>
+        </div>
+
+        <div class="code-explanation">
+          <h4>How This Works</h4>
+          <div class="var-explain">
+            <div class="ve-item"><code>m</code> — Length of the pattern string.</div>
+            <div class="ve-item"><code>lps</code> — The result array. <code>lps[i]</code> stores the length of the longest proper prefix of <code>pattern[0..i]</code> that is also a suffix.</div>
+            <div class="ve-item"><code>length</code> — Tracks the length of the current matching prefix-suffix. Acts as a pointer into the pattern.</div>
+            <div class="ve-item"><code>i</code> — Scans through the pattern from position 1 onward.</div>
+          </div>
+          <p>The key insight: when there's a mismatch at <code>pattern[i]</code> vs <code>pattern[length]</code>, we don't restart from zero. Instead, we fall back to <code>lps[length - 1]</code> — the next best prefix-suffix — and try again. This is the same "remembering" trick KMP uses during the actual search.</p>
+        </div>
+      </div>
+
+      <!-- Tab 2: Search Code -->
+      <div class="impl-panel" id="panel-search-code">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Python</span>
+            <button class="copy-btn" data-target="code-search">Copy</button>
+          </div>
+          <pre><code id="code-search"><span class="kw">def</span> <span class="fn">kmp_search</span>(text, pattern):
+    <span class="cm">"""Find all occurrences of pattern in text using KMP."""</span>
+    n = <span class="fn">len</span>(text)
+    m = <span class="fn">len</span>(pattern)
+    <span class="kw">if</span> m == <span class="num">0</span>:
+        <span class="kw">return</span> []
+
+    lps = compute_lps(pattern)  <span class="cm"># Preprocess: build the LPS array</span>
+    i = <span class="num">0</span>  <span class="cm"># Pointer for text — never moves backwards!</span>
+    j = <span class="num">0</span>  <span class="cm"># Pointer for pattern — falls back using LPS</span>
+    result = []
+
+    <span class="kw">while</span> i < n:
+        <span class="kw">if</span> text[i] == pattern[j]:
+            <span class="cm"># Characters match → advance both pointers</span>
+            i += <span class="num">1</span>
+            j += <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="kw">if</span> j != <span class="num">0</span>:
+                <span class="cm"># Mismatch after partial match → use LPS to skip</span>
+                j = lps[j - <span class="num">1</span>]
+            <span class="kw">else</span>:
+                <span class="cm"># Mismatch at first character → advance text pointer</span>
+                i += <span class="num">1</span>
+
+        <span class="kw">if</span> j == m:
+            <span class="cm"># Full pattern matched! Record the starting index.</span>
+            result.append(i - j)
+            j = lps[j - <span class="num">1</span>]  <span class="cm"># Continue searching for more matches</span>
+
+    <span class="kw">return</span> result</code></pre>
+        </div>
+
+        <div class="code-explanation">
+          <h4>How This Works</h4>
+          <div class="var-explain">
+            <div class="ve-item"><code>i</code> — Text pointer. Moves only forward, never backwards. This is why KMP achieves O(n) scanning.</div>
+            <div class="ve-item"><code>j</code> — Pattern pointer. When a mismatch occurs, it falls back using <code>lps[j-1]</code> instead of resetting to 0.</div>
+            <div class="ve-item"><code>result</code> — Collects all starting indices where the pattern is found.</div>
+          </div>
+          <p>When <code>j == m</code> (we've matched all pattern characters), we record the match at index <code>i - j</code> and set <code>j = lps[j-1]</code> to continue searching for overlapping matches.</p>
+        </div>
+      </div>
+
+      <!-- Tab 3: Full Code -->
+      <div class="impl-panel" id="panel-full-code">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang">Python</span>
+            <button class="copy-btn" data-target="code-full">Copy</button>
+          </div>
+          <pre><code id="code-full"><span class="kw">def</span> <span class="fn">compute_lps</span>(pattern):
+    <span class="cm">"""Build the Longest Proper Prefix-Suffix array."""</span>
+    m = <span class="fn">len</span>(pattern)
+    lps = [<span class="num">0</span>] * m
+    length = <span class="num">0</span>
+    i = <span class="num">1</span>
+    <span class="kw">while</span> i < m:
+        <span class="kw">if</span> pattern[i] == pattern[length]:
+            length += <span class="num">1</span>
+            lps[i] = length
+            i += <span class="num">1</span>
+        <span class="kw">elif</span> length != <span class="num">0</span>:
+            length = lps[length - <span class="num">1</span>]
+        <span class="kw">else</span>:
+            lps[i] = <span class="num">0</span>
+            i += <span class="num">1</span>
+    <span class="kw">return</span> lps
+
+
+<span class="kw">def</span> <span class="fn">kmp_search</span>(text, pattern):
+    <span class="cm">"""Find all occurrences of pattern in text using KMP."""</span>
+    n = <span class="fn">len</span>(text)
+    m = <span class="fn">len</span>(pattern)
+    <span class="kw">if</span> m == <span class="num">0</span>:
+        <span class="kw">return</span> []
+    lps = compute_lps(pattern)
+    i = <span class="num">0</span>
+    j = <span class="num">0</span>
+    result = []
+    <span class="kw">while</span> i < n:
+        <span class="kw">if</span> text[i] == pattern[j]:
+            i += <span class="num">1</span>
+            j += <span class="num">1</span>
+        <span class="kw">else</span>:
+            <span class="kw">if</span> j != <span class="num">0</span>:
+                j = lps[j - <span class="num">1</span>]
+            <span class="kw">else</span>:
+                i += <span class="num">1</span>
+        <span class="kw">if</span> j == m:
+            result.append(i - j)
+            j = lps[j - <span class="num">1</span>]
+    <span class="kw">return</span> result
+
+
+<span class="cm"># Example usage:</span>
+text = <span class="str">"ABABDABACDABABCABAB"</span>
+pattern = <span class="str">"ABABCABAB"</span>
+<span class="fn">print</span>(kmp_search(text, pattern))  <span class="cm"># Output: [9]</span></code></pre>
+        </div>
+        <div class="code-explanation">
+          <h4>Expected Output</h4>
+          <p>Running the example above produces <code>[9]</code>, meaning the pattern <code>ABABCABAB</code> starts at index 9 in the text.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 6: COMPLEXITY ANALYSIS ========== -->
+  <section id="complexity" class="section section-alt" data-index="6">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">06</span>
+        <div>
+          <h2>Complexity Analysis</h2>
+          <p class="section-sub">Why KMP is efficient — a rigorous look.</p>
+        </div>
+        <span class="section-time">~3 min</span>
+      </div>
+
+      <div class="complexity-table-wrap">
+        <table class="comp-table complexity-tbl">
+          <thead>
+            <tr>
+              <th>Operation</th>
+              <th>Time Complexity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>LPS construction</td><td><code>O(m)</code></td></tr>
+            <tr><td>Pattern searching</td><td><code>O(n)</code></td></tr>
+            <tr><td class="row-highlight">Total</td><td class="row-highlight"><code>O(n + m)</code></td></tr>
+            <tr><td>Auxiliary space</td><td><code>O(m)</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="complexity-reasons">
+        <h3 class="subsection-title">Why Is This True?</h3>
+        <div class="reason-cards">
+          <div class="reason-card">
+            <div class="reason-icon">→</div>
+            <h4>The text pointer <code>i</code> never moves backwards</h4>
+            <p>In each iteration of the search loop, either <code>i</code> advances (match or <code>j == 0</code> mismatch) or <code>j</code> decreases via the LPS fallback. Since <code>i</code> only moves forward through the text of length <em>n</em>, the text is scanned in at most <strong>O(n)</strong> steps.</p>
+          </div>
+          <div class="reason-card">
+            <div class="reason-icon">↩</div>
+            <h4>The pattern pointer <code>j</code> falls back using LPS</h4>
+            <p>When a mismatch occurs, <code>j</code> doesn't reset to 0. It falls back to <code>LPS[j−1]</code>, which is always strictly less than <code>j</code>. The total number of fallbacks across the entire search is bounded because <code>j</code> can only fall back as many times as it has been incremented — giving an amortized <strong>O(n)</strong> total.</p>
+          </div>
+          <div class="reason-card">
+            <div class="reason-icon">∀</div>
+            <h4>Every character is processed a bounded number of times</h4>
+            <p>Each character in the text is compared at most a constant number of times. The amortized analysis shows that the total comparisons across all positions sum to at most <strong>2n</strong>, since each increment of <code>i</code> is paired with at most one fallback sequence.</p>
+          </div>
+          <div class="reason-card">
+            <div class="reason-icon">💾</div>
+            <h4>The LPS array requires O(m) additional memory</h4>
+            <p>The only extra space KMP needs is the LPS array of size <em>m</em> (the pattern length). The search itself uses constant additional variables (<code>i</code>, <code>j</code>), making the total auxiliary space <strong>O(m)</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="complexity-visual">
+        <h3 class="subsection-title">Naive vs KMP: Growth Comparison</h3>
+        <div class="chart-container" id="complexity-chart">
+          <canvas id="complexity-canvas"></canvas>
+        </div>
+        <p class="chart-caption">As input size grows, the difference between O(n×m) and O(n+m) becomes dramatic.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 7: CHALLENGE ZONE ========== -->
+  <section id="challenges" class="section" data-index="7">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">07</span>
+        <div>
+          <h2>Challenge Zone</h2>
+          <p class="section-sub">Test your understanding with progressive exercises.</p>
+        </div>
+        <span class="section-time">~7 min</span>
+      </div>
+
+      <!-- Challenge 1 -->
+      <div class="challenge-card" id="challenge-1">
+        <div class="challenge-header">
+          <span class="challenge-badge badge-beginner">Beginner</span>
+          <h3>Challenge 1: Find the LPS Array</h3>
+        </div>
+        <div class="challenge-body">
+          <p>Compute the LPS array for the following pattern:</p>
+          <div class="challenge-pattern"><code>AABAACAABAA</code></div>
+          <p>Enter each LPS value separated by commas:</p>
+          <div class="challenge-input-row">
+            <input type="text" class="challenge-input" id="ch1-input" placeholder="e.g. 0, 1, 0, 1, ..." spellcheck="false" autocomplete="off">
+            <button class="btn btn-primary" id="ch1-submit">Submit</button>
+          </div>
+          <div class="challenge-hint" id="ch1-hint" style="display:none;">
+            <strong>Hint:</strong> Start by finding proper prefixes that are also suffixes for each substring. For "AABAA", the prefix "AA" is also a suffix — so LPS = 2 at that position.
+          </div>
+          <button class="btn btn-outline btn-sm" id="ch1-hint-btn">Show Hint</button>
+          <div class="challenge-feedback" id="ch1-feedback" style="display:none;"></div>
+          <div class="challenge-solution" id="ch1-solution" style="display:none;">
+            <strong>Solution:</strong>
+            <p>Pattern: <code>A A B A A C A A B A A</code></p>
+            <p>LPS: &nbsp;&nbsp; <code>0 1 0 1 2 0 1 2 3 4 5</code></p>
+            <ul>
+              <li>Index 0 (A): No proper prefix → 0</li>
+              <li>Index 1 (AA): "A" is both prefix and suffix → 1</li>
+              <li>Index 2 (AAB): No matching prefix-suffix → 0</li>
+              <li>Index 3 (AABA): "A" matches → 1</li>
+              <li>Index 4 (AABAA): "AA" matches → 2</li>
+              <li>Index 5 (AABAAC): No match → 0</li>
+              <li>Index 6-10: The pattern "AABAA" repeats → 1, 2, 3, 4, 5</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Challenge 2 -->
+      <div class="challenge-card" id="challenge-2">
+        <div class="challenge-header">
+          <span class="challenge-badge badge-intermediate">Intermediate</span>
+          <h3>Challenge 2: Find All Occurrences</h3>
+        </div>
+        <div class="challenge-body">
+          <p>Find all starting indices where <code>ABC</code> occurs in:</p>
+          <div class="challenge-pattern"><code>ABCABCABC</code></div>
+          <p>Enter the indices separated by commas:</p>
+          <div class="challenge-input-row">
+            <input type="text" class="challenge-input" id="ch2-input" placeholder="e.g. 0, 3, ..." spellcheck="false" autocomplete="off">
+            <button class="btn btn-primary" id="ch2-submit">Submit</button>
+          </div>
+          <div class="challenge-hint" id="ch2-hint" style="display:none;">
+            <strong>Hint:</strong> The LPS array for "ABC" is [0, 0, 0]. Run KMP mentally: match at index 0, then at index 3, then at index 6. Non-overlapping matches.
+          </div>
+          <button class="btn btn-outline btn-sm" id="ch2-hint-btn">Show Hint</button>
+          <div class="challenge-feedback" id="ch2-feedback" style="display:none;"></div>
+          <div class="challenge-solution" id="ch2-solution" style="display:none;">
+            <strong>Solution:</strong>
+            <p>The pattern <code>ABC</code> occurs at indices <code>0, 3, 6</code>.</p>
+            <p>LPS for "ABC" = [0, 0, 0]. Since there's no prefix-suffix overlap, after each match at position <code>i</code>, the pattern simply starts fresh at <code>i + 3</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Challenge 3 -->
+      <div class="challenge-card" id="challenge-3">
+        <div class="challenge-header">
+          <span class="challenge-badge badge-advanced">Advanced</span>
+          <h3>Challenge 3: Count Comparisons</h3>
+        </div>
+        <div class="challenge-body">
+          <p>Modify the KMP implementation to <strong>return the number of character comparisons</strong> performed during pattern matching.</p>
+          <div class="challenge-code-editor">
+            <div class="code-header">
+              <span class="code-lang">Python</span>
+            </div>
+            <textarea id="ch3-editor" class="code-editor" rows="20" spellcheck="false">def kmp_search_count(text, pattern):
+    """Return (matches, comparison_count)."""
+    n = len(text)
+    m = len(pattern)
+    if m == 0:
+        return [], 0
+
+    lps = compute_lps(pattern)
+    i = 0
+    j = 0
+    result = []
+    comparisons = 0
+
+    while i < n:
+        # TODO: Increment comparisons at the right place
+        if text[i] == pattern[j]:
+            i += 1
+            j += 1
+        else:
+            if j != 0:
+                j = lps[j - 1]
+            else:
+                i += 1
+
+        if j == m:
+            result.append(i - j)
+            j = lps[j - 1]
+
+    return result, comparisons
+
+
+# Test with:
+# text = "ABABDABACDABABCABAB"
+# pattern = "ABABCABAB"
+# Expected: matches=[9], comparisons=?</textarea>
+          </div>
+          <div class="challenge-input-row">
+            <button class="btn btn-primary" id="ch3-submit">Check Answer</button>
+          </div>
+          <div class="challenge-hint" id="ch3-hint" style="display:none;">
+            <strong>Hint:</strong> A "comparison" happens every time you check <code>text[i] == pattern[j]</code>. You should increment <code>comparisons</code> right before (or right at) the <code>if text[i] == pattern[j]</code> line. Count every comparison, whether it matches or not.
+          </div>
+          <button class="btn btn-outline btn-sm" id="ch3-hint-btn">Show Hint</button>
+          <div class="challenge-feedback" id="ch3-feedback" style="display:none;"></div>
+          <div class="challenge-solution" id="ch3-solution" style="display:none;">
+            <strong>Solution:</strong>
+            <p>Add <code>comparisons += 1</code> immediately before the comparison <code>if text[i] == pattern[j]</code>:</p>
+            <pre><code>while i < n:
+    comparisons += 1  # ← Count every comparison
+    if text[i] == pattern[j]:
+        i += 1
+        j += 1
+    else:
+        ...</code></pre>
+            <p>For text = "ABABDABACDABABCABAB" and pattern = "ABABCABAB", the function returns <code>([9], 22)</code> — 22 total character comparisons.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenges-score" id="challenges-score">
+        <span>Challenges completed: </span><strong id="ch-completed">0</strong> / 3
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== SECTION 8: KNOWLEDGE CHECK ========== -->
+  <section id="quiz" class="section section-alt" data-index="8">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">08</span>
+        <div>
+          <h2>Knowledge Check</h2>
+          <p class="section-sub">Five questions to test what you've learned.</p>
+        </div>
+        <span class="section-time">~3 min</span>
+      </div>
+
+      <div class="quiz-container" id="quiz-container">
+        <!-- Question 1 -->
+        <div class="quiz-question" data-q="1" id="qq-1">
+          <div class="qq-header">
+            <span class="qq-num">Q1</span>
+            <span class="qq-status" id="qq-status-1"></span>
+          </div>
+          <p class="qq-text">What does LPS stand for?</p>
+          <div class="qq-options">
+            <label class="qq-option"><input type="radio" name="q1" value="A"><span class="option-letter">A</span> Longest Pattern Sequence</label>
+            <label class="qq-option"><input type="radio" name="q1" value="B"><span class="option-letter">B</span> Longest Proper Prefix which is also a Suffix</label>
+            <label class="qq-option"><input type="radio" name="q1" value="C"><span class="option-letter">C</span> Linear Prefix Search</label>
+            <label class="qq-option"><input type="radio" name="q1" value="D"><span class="option-letter">D</span> Longest Partial String</label>
+          </div>
+          <div class="qq-feedback" id="qq-fb-1" style="display:none;"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="quiz-question" data-q="2" id="qq-2">
+          <div class="qq-header">
+            <span class="qq-num">Q2</span>
+            <span class="qq-status" id="qq-status-2"></span>
+          </div>
+          <p class="qq-text">What is the overall time complexity of the KMP algorithm?</p>
+          <div class="qq-options">
+            <label class="qq-option"><input type="radio" name="q2" value="A"><span class="option-letter">A</span> O(n × m)</label>
+            <label class="qq-option"><input type="radio" name="q2" value="B"><span class="option-letter">B</span> O(n²)</label>
+            <label class="qq-option"><input type="radio" name="q2" value="C"><span class="option-letter">C</span> O(n + m)</label>
+            <label class="qq-option"><input type="radio" name="q2" value="D"><span class="option-letter">D</span> O(n log m)</label>
+          </div>
+          <div class="qq-feedback" id="qq-fb-2" style="display:none;"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="quiz-question" data-q="3" id="qq-3">
+          <div class="qq-header">
+            <span class="qq-num">Q3</span>
+            <span class="qq-status" id="qq-status-3"></span>
+          </div>
+          <p class="qq-text">In KMP, what happens to the text pointer <code>i</code> when a mismatch occurs?</p>
+          <div class="qq-options">
+            <label class="qq-option"><input type="radio" name="q3" value="A"><span class="option-letter">A</span> It resets to the beginning</label>
+            <label class="qq-option"><input type="radio" name="q3" value="B"><span class="option-letter">B</span> It moves backwards by one position</label>
+            <label class="qq-option"><input type="radio" name="q3" value="C"><span class="option-letter">C</span> It never moves backwards</label>
+            <label class="qq-option"><input type="radio" name="q3" value="D"><span class="option-letter">D</span> It jumps to the end of the text</label>
+          </div>
+          <div class="qq-feedback" id="qq-fb-3" style="display:none;"></div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="quiz-question" data-q="4" id="qq-4">
+          <div class="qq-header">
+            <span class="qq-num">Q4</span>
+            <span class="qq-status" id="qq-status-4"></span>
+          </div>
+          <p class="qq-text">For the pattern <code>ABAB</code>, what is the LPS array?</p>
+          <div class="qq-options">
+            <label class="qq-option"><input type="radio" name="q4" value="A"><span class="option-letter">A</span> [0, 0, 0, 0]</label>
+            <label class="qq-option"><input type="radio" name="q4" value="B"><span class="option-letter">B</span> [0, 0, 1, 2]</label>
+            <label class="qq-option"><input type="radio" name="q4" value="C"><span class="option-letter">C</span> [0, 1, 2, 3]</label>
+            <label class="qq-option"><input type="radio" name="q4" value="D"><span class="option-letter">D</span> [1, 1, 2, 2]</label>
+          </div>
+          <div class="qq-feedback" id="qq-fb-4" style="display:none;"></div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="quiz-question" data-q="5" id="qq-5">
+          <div class="qq-header">
+            <span class="qq-num">Q5</span>
+            <span class="qq-status" id="qq-status-5"></span>
+          </div>
+          <p class="qq-text">What is the auxiliary space complexity of the KMP algorithm?</p>
+          <div class="qq-options">
+            <label class="qq-option"><input type="radio" name="q5" value="A"><span class="option-letter">A</span> O(1)</label>
+            <label class="qq-option"><input type="radio" name="q5" value="B"><span class="option-letter">B</span> O(m)</label>
+            <label class="qq-option"><input type="radio" name="q5" value="C"><span class="option-letter">C</span> O(n)</label>
+            <label class="qq-option"><input type="radio" name="q5" value="D"><span class="option-letter">D</span> O(n + m)</label>
+          </div>
+          <div class="qq-feedback" id="qq-fb-5" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-primary btn-lg" id="quiz-submit">Submit Answers</button>
+      </div>
+
+      <div class="quiz-results" id="quiz-results" style="display:none;">
+        <div class="quiz-score-card">
+          <div class="score-circle" id="score-circle">
+            <span class="score-num" id="score-num">0</span>
+            <span class="score-denom">/ 5</span>
+          </div>
+          <div class="score-label" id="score-label"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== COMPLETION ========== -->
+  <section id="completion" class="section section-completion" style="display:none;">
+    <div class="container" style="text-align:center;">
+      <div class="completion-icon">🎉</div>
+      <h2>Congratulations!</h2>
+      <p class="completion-text">You've completed the <strong>KMP Explorer</strong> interactive learning experience.</p>
+      <div class="completion-stats" id="completion-stats"></div>
+      <button class="btn btn-primary btn-lg" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to Top</button>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer id="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="brand-icon">◆</span> KMP Explorer
+        </div>
+        <p class="footer-text">An interactive lesson on the Knuth-Morris-Pratt string matching algorithm.</p>
+        <p class="footer-copy">Built for learning. No external dependencies.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== LEARNING TIMER ========== -->
+  <div class="learning-timer" id="learning-timer">
+    <div class="timer-inner">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-text" id="timer-text">00:00</span>
+      <span class="timer-total">/ 45:00</span>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
